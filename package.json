@@ -1,0 +1,21 @@
+{
+  "name": "monads",
+  "version": "1.0.0",
+  "description": "Monads Experimentation",
+  "main": "out/index.js",
+  "scripts": {
+    "compile": "tsc -p tsconfig.build.json",
+    "start": "npm run compile && node out/index.js",
+    "pretest": "rm -r out_test/* && tsc -p tsconfig.test.json",
+    "test": "mocha -c -R dot --recursive out_test || true"
+  },
+  "author": "Charles Pierce",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.38",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "typescript": "^2.1.5"
+  }
+}
