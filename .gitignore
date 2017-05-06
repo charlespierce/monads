@@ -1,4 +1,2 @@
 node_modules/
-out/
-out_test/
-.vscode/
+npm-debug.log

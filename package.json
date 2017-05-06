@@ -2,8 +2,17 @@
   "name": "monads",
   "version": "1.0.0",
   "description": "Monads Experimentation",
-  "scripts": {},
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
   "author": "Charles Pierce",
   "license": "ISC",
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/chai": "^3.5.2",
+    "@types/mocha": "^2.2.41",
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0",
+    "ts-node": "^3.0.4",
+    "typescript": "^2.3.2"
+  }
 }
