@@ -1,9 +1,0 @@
-{
-    "extends": "./tsconfig.base",
-    "compilerOptions": {
-        "outDir": "out_test"
-    },
-    "include": [
-        "test/**/*.ts"
-    ]
-}
