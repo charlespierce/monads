@@ -3,28 +3,26 @@ import { Monad } from './monad';
 interface Maybe<T> extends Monad<T> {
     map<U>(func: (v: T) => U): Maybe<U>;
     bind<U>(func: (v: T) => Maybe<U>): Maybe<U>;
-    case(cases: MaybeCase<T>): void;
+    match<U>(pattern: MaybePattern<T, U>): U;
 }
 
-export interface MaybeCase<T> {
-    just(value: T): void;
-    nothing(): void;
+export interface MaybePattern<T, U> {
+    just(value: T): U;
+    nothing(): U;
 }
 
 export function Just<T>(value: T): Maybe<T> {
     return {
         map: <U>(func: (v: T) => U) => Just(func(value)),
         bind: <U>(func: (v: T) => Maybe<U>) => func(value),
-        case: (cases: MaybeCase<T>) => cases.just(value),
-        toString: () => `Just { ${value} }`
+        match: <U>(pattern: MaybePattern<T, U>) => pattern.just(value),
     }
 }
 
 export function Nothing<T>(): Maybe<T> {
     return {
-        map: <U>(func: (v: T) => U) => Nothing<U>(),
-        bind: <U>(func: (v: T) => Maybe<U>) => Nothing<U>(),
-        case: (cases: MaybeCase<T>) => cases.nothing(),
-        toString: () => 'Nothing'
+        map: <U>(func: (v: T) => U) => Nothing(),
+        bind: <U>(func: (v: T) => Maybe<U>) => Nothing(),
+        match: <U>(pattern: MaybePattern<T, U>) => pattern.nothing(),
     }
 }
