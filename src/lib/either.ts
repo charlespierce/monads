@@ -1,28 +1,38 @@
-import { Monad } from './monad';
-
-interface Either<E, T> extends Monad<T> {
-    map<U>(func: (v: T) => U): Either<E, U>;
-    bind<U>(func: (v: T) => Either<E, U>): Either<E, U>;
-    match<U>(pattern: EitherPattern<E, T, U>): U;
+export interface EitherCase<E, T, U> {
+    left: (error: E) => U;
+    right: (value: T) => U;
 }
 
-export interface EitherPattern<E, T, U> {
-    left(error: E): U;
-    right(value: T): U;
+export interface Left<E> {
+    match: <T, U>(pattern: EitherCase<E, T, U>) => U;
 }
 
-export function Right<E, T>(value: T): Either<E, T> {
+export interface Right<T> {
+    match: <E, U>(pattern: EitherCase<E, T, U>) => U;
+}
+
+export interface Either<E, T> {
+    match: <U>(pattern: EitherCase<E, T, U>) => U;
+}
+
+export function Left<E>(error: E): Left<E> {
     return {
-        map: <U>(func: (v: T) => U) => Right(func(value)),
-        bind: <U>(func: (v: T) => Either<E, U>) => func(value),
-        match: <U>(pattern: EitherPattern<E, T, U>) => pattern.right(value),
+        match: <T, U>(pattern: EitherCase<E, T, U>) => pattern.left(error)
     };
 }
 
-export function Left<E, T>(error: E): Either<E, T> {
+export function Right<T>(value: T): Right<T> {
     return {
-        map: <U>(func: (v: T) => U) => Left(error),
-        bind: <U>(func: (v: T) => Either<E, U>) => Left(error),
-        match: <U>(pattern: EitherPattern<E, T, U>) => pattern.left(error),
+        match: <E, U>(pattern: EitherCase<E, T, U>) => pattern.right(value)
     };
 }
+
+export const map = <E, T, U>(fn: (value: T) => U) => (either: Either<E, T>) => either.match<Either<E, U>>({
+    left: (error: E) => Left(error),
+    right: (value: T) => Right(fn(value))
+});
+
+export const bind = <E, T, U>(fn: (value: T) => Either<E, U>) => (either: Either<E, T>) => either.match<Either<E, U>>({
+    left: (error: E) => Left(error),
+    right: (value: T) => fn(value)
+});
